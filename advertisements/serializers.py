@@ -39,6 +39,11 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
 
+        if len(Advertisement.objects.filter(creator=self.context["request"].user, status='OPEN')) > 9:
+
+            raise ValidationError('Открытых объЯвлений должно быть не более 10')
+
+
         return super().update(instance, validated_data)
 
     def validate(self, data):
