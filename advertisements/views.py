@@ -40,9 +40,8 @@ class AdvertisementViewSet(ModelViewSet):
         elif self.request.user.is_staff:
              qs = Advertisement.objects.all().order_by('id')
 
-        elif IsOwnerOrReadOnly() or self.request.user.is_authenticated:
-             current_user = User.objects.get(username=self.request.user)
+        else:
              qs = Advertisement.objects.filter(~Q(status='DRAFT') |
-                                                    Q(status='DRAFT', creator=current_user)).order_by('id')
+                                                Q(status='DRAFT', creator=self.request.user)).order_by('id')
 
         return qs
